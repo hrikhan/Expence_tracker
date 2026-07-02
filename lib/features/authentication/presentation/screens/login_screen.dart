@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/core.dart';
 
 import '../../controllers/auth_controller.dart';
 import '../../../../routes/app_routes.dart';
@@ -71,30 +72,11 @@ class LoginScreen extends GetView<AuthController> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  TextField(
+                  CustomTextField(
                     controller: controller.emailController,
+                    hintText: "Enter your email",
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: "Enter your email",
-                      hintStyle: GoogleFonts.inter(color: const Color(0xFF8C8681)),
-                      prefixIcon: Icon(Icons.email_outlined, size: 20.r, color: const Color(0xFF8C8681)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.r),
-                        borderSide: const BorderSide(color: Color(0xFFEAE7E4)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.r),
-                        borderSide: const BorderSide(color: Color(0xFFEAE7E4)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.r),
-                        borderSide: const BorderSide(color: Color(0xFF231C18), width: 1.5),
-                      ),
-                    ),
-                    style: GoogleFonts.inter(fontSize: 14.sp, color: const Color(0xFF231C18)),
+                    prefixIcon: Icon(Icons.email_outlined, size: 20.r, color: const Color(0xFF8C8681)),
                   ),
                   SizedBox(height: 20.h),
                   // Password Input Field
@@ -107,40 +89,21 @@ class LoginScreen extends GetView<AuthController> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  Obx(() => TextField(
+                  Obx(() => CustomTextField(
                         controller: controller.passwordController,
+                        hintText: "Enter your password",
                         obscureText: controller.isPasswordObscured.value,
-                        decoration: InputDecoration(
-                          hintText: "Enter your password",
-                          hintStyle: GoogleFonts.inter(color: const Color(0xFF8C8681)),
-                          prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: const Color(0xFF8C8681)),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              controller.isPasswordObscured.value
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              size: 20.r,
-                              color: const Color(0xFF8C8681),
-                            ),
-                            onPressed: controller.togglePasswordObscured,
+                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: const Color(0xFF8C8681)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            controller.isPasswordObscured.value
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            size: 20.r,
+                            color: const Color(0xFF8C8681),
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.r),
-                            borderSide: const BorderSide(color: Color(0xFFEAE7E4)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.r),
-                            borderSide: const BorderSide(color: Color(0xFFEAE7E4)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.r),
-                            borderSide: const BorderSide(color: Color(0xFF231C18), width: 1.5),
-                          ),
+                          onPressed: controller.togglePasswordObscured,
                         ),
-                        style: GoogleFonts.inter(fontSize: 14.sp, color: const Color(0xFF231C18)),
                       )),
                   SizedBox(height: 12.h),
                   // Forgot Password Link
@@ -160,49 +123,19 @@ class LoginScreen extends GetView<AuthController> {
                   ),
                   SizedBox(height: 24.h),
                   // Log In Button
-                  Obx(() {
-                    final loading = controller.isLoading.value;
-                    return ElevatedButton(
-                      onPressed: loading
-                          ? null
-                          : () async {
-                              if (controller.validateLogin()) {
-                                controller.isLoading.value = true;
-                                // Mock API response latency
-                                await Future.delayed(const Duration(milliseconds: 1000));
-                                controller.isLoading.value = false;
-                                // Clear and transition
-                                controller.clearFields();
-                                Get.offAllNamed(AppRoute.getNavigationScreen());
-                              }
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF231C18),
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: loading
-                          ? SizedBox(
-                              width: 20.w,
-                              height: 20.h,
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : Text(
-                              "Log In",
-                              style: GoogleFonts.inter(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    );
-                  }),
+                  Obx(() => CustomButton(
+                        text: "Log In",
+                        isLoading: controller.isLoading.value,
+                        onPressed: () async {
+                          if (controller.validateLogin()) {
+                            final success = await controller.login();
+                            if (success) {
+                              controller.clearFields();
+                              Get.offAllNamed(AppRoute.getNavigationScreen());
+                            }
+                          }
+                        },
+                      )),
                   SizedBox(height: 24.h),
                   // Sign Up Navigation Link
                   Center(

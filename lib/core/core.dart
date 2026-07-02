@@ -19,6 +19,8 @@ export 'utils/logging/logger.dart';
 export 'models/response_data.dart';
 export 'common/styles/global_text_style.dart';
 export 'common/widgets/custom_card.dart';
+export 'common/widgets/custom_text_field.dart';
+export 'common/widgets/custom_button.dart';
 export 'bindings/controller_binder.dart';
 export 'services/network_caller.dart';
 export 'services/firebase/fcm_handler.dart';

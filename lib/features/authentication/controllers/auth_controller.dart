@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:expense_tracker/core/core.dart';
 
 class AuthController extends GetxController {
+  final NetworkCaller _networkCaller = NetworkCaller();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -79,6 +81,101 @@ class AuthController extends GetxController {
       return false;
     }
     return true;
+  }
+
+  Future<bool> signUp() async {
+    isLoading.value = true;
+    try {
+      final response = await _networkCaller.postRequest(
+        ApiConstants.signUp,
+        body: {
+          'email': emailController.text.trim(),
+          'password': passwordController.text,
+        },
+      );
+
+      if (response.isSuccess) {
+        Get.snackbar(
+          "Success",
+          "Account created successfully! Please log in.",
+          backgroundColor: const Color(0xFF8A7665),
+          colorText: Colors.white,
+        );
+        return true;
+      } else {
+        Get.snackbar(
+          "Sign Up Failed",
+          response.errorMessage.isNotEmpty ? response.errorMessage : "Something went wrong.",
+          backgroundColor: const Color(0xFFC84C4C),
+          colorText: Colors.white,
+        );
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: const Color(0xFFC84C4C),
+        colorText: Colors.white,
+      );
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<bool> login() async {
+    isLoading.value = true;
+    try {
+      final response = await _networkCaller.postRequest(
+        ApiConstants.login,
+        body: {
+          'email': emailController.text.trim(),
+          'password': passwordController.text,
+        },
+      );
+
+      if (response.isSuccess) {
+        final Map<String, dynamic> data = response.responseData;
+        final token = data['token'];
+        if (token != null && token.toString().isNotEmpty) {
+          await StorageService.saveToken(token.toString());
+          Get.snackbar(
+            "Success",
+            "Logged in successfully!",
+            backgroundColor: const Color(0xFF8A7665),
+            colorText: Colors.white,
+          );
+          return true;
+        } else {
+          Get.snackbar(
+            "Login Failed",
+            "Invalid response from server.",
+            backgroundColor: const Color(0xFFC84C4C),
+            colorText: Colors.white,
+          );
+          return false;
+        }
+      } else {
+        Get.snackbar(
+          "Login Failed",
+          response.errorMessage.isNotEmpty ? response.errorMessage : "Invalid email or password.",
+          backgroundColor: const Color(0xFFC84C4C),
+          colorText: Colors.white,
+        );
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: const Color(0xFFC84C4C),
+        colorText: Colors.white,
+      );
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void clearFields() {

@@ -94,16 +94,16 @@ class NavigationScreen extends GetView<NavigationController> {
               return Scaffold(
                 backgroundColor: const Color(0xFFFAF8F6),
                 body: Obx(() => _pages[controller.currentIndex.value]),
-                floatingActionButton: Padding(
-                  padding: EdgeInsets.only(bottom: 8.h),
-                  child: FloatingActionButton(
-                    onPressed: () {},
-                    backgroundColor: const Color(0xFF231C18),
+                floatingActionButton: Obx(() {
+                  final isSelected = controller.currentIndex.value == 1;
+                  return FloatingActionButton(
+                    onPressed: () => controller.changeIndex(1),
+                    backgroundColor: isSelected ? const Color(0xFF231C18) : const Color(0xFFB09F92),
                     shape: const CircleBorder(),
-                    child: Icon(Icons.add, color: Colors.white, size: 24.r),
-                  ),
-                ),
-                floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+                    child: Icon(Icons.auto_awesome, color: Colors.white, size: 24.r),
+                  );
+                }),
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
                 bottomNavigationBar: _buildMobileBottomNavBar(),
               );
             }
@@ -203,53 +203,45 @@ class NavigationScreen extends GetView<NavigationController> {
 
   // Bottom Navigation Bar for Mobile
   Widget _buildMobileBottomNavBar() {
-    return Container(
-      height: 80.h,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF231C18).withOpacity(0.04),
-            blurRadius: 16.r,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          // Home Tab
-          _buildMobileTabItem(
-            index: 0,
-            icon: Icons.calendar_today_outlined,
-            activeIcon: Icons.calendar_today,
-            label: "Home",
-          ),
-          // Sparkle Tab (Center round beige button)
-          GestureDetector(
-            onTap: () => controller.changeIndex(1),
-            child: Container(
-              width: 52.w,
-              height: 52.h,
-              decoration: const BoxDecoration(
-                color: Color(0xFFB09F92),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.auto_awesome,
-                color: Colors.white,
-                size: 24.r,
-              ),
+    return BottomAppBar(
+      color: Colors.white,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8.0,
+      child: Container(
+        height: 64.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF231C18).withOpacity(0.04),
+              blurRadius: 16.r,
+              offset: const Offset(0, -4),
             ),
-          ),
-          // Profile Tab
-          _buildMobileTabItem(
-            index: 2,
-            icon: Icons.person_outline,
-            activeIcon: Icons.person,
-            label: "Profile",
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // Home Tab
+            _buildMobileTabItem(
+              index: 0,
+              icon: Icons.calendar_today_outlined,
+              activeIcon: Icons.calendar_today,
+              label: "Home",
+            ),
+            // Spacing placeholder for docked FAB
+            SizedBox(width: 48.w),
+            // Profile Tab
+            _buildMobileTabItem(
+              index: 2,
+              icon: Icons.person_outline,
+              activeIcon: Icons.person,
+              label: "Profile",
+            ),
+          ],
+        ),
       ),
     );
   }

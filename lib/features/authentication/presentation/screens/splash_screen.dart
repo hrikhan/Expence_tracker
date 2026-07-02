@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../routes/app_routes.dart';
+import 'package:expense_tracker/core/core.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -69,7 +70,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void _navigateToLogin() async {
     // Delay navigation to match animation timeline
     await Future.delayed(const Duration(milliseconds: 3200));
-    Get.offNamed(AppRoute.getLoginScreen());
+    if (StorageService.hasToken()) {
+      Get.offNamed(AppRoute.getNavigationScreen());
+    } else {
+      Get.offNamed(AppRoute.getLoginScreen());
+    }
   }
 
   @override

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'package:expense_tracker/features/tracker/controllers/tracker_controller.dart';
+import 'package:expense_tracker/features/profile/controllers/profile_controller.dart';
 
 class DashboardHeader extends StatelessWidget {
   const DashboardHeader({super.key});
@@ -33,14 +36,23 @@ class DashboardHeader extends StatelessWidget {
                   color: const Color(0xFF8C8681),
                 ),
               ),
-              Text(
-                "User",
-                style: GoogleFonts.inter(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF231C18),
-                ),
-              ),
+              Obx(() {
+                final profileController = Get.find<ProfileController>();
+                final user = profileController.profile.value;
+                final email = user?.email ?? "User";
+                final name = email.split('@')[0];
+                final capitalized = name.isNotEmpty
+                    ? name[0].toUpperCase() + name.substring(1)
+                    : "User";
+                return Text(
+                  capitalized,
+                  style: GoogleFonts.inter(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF231C18),
+                  ),
+                );
+              }),
             ],
           ),
         ),
@@ -155,121 +167,136 @@ class BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(24.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24.r),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF231C18).withOpacity(0.04),
-            blurRadius: 16.r,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "CURRENT DAY BALANCE",
-            style: GoogleFonts.inter(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-              color: const Color(0xFF8C8681),
+    final controller = Get.find<TrackerController>();
+
+    return Obx(() {
+      final bal = controller.balance.value;
+      final inc = controller.totalIncome.value;
+      final exp = controller.totalExpense.value;
+
+      double progress = 0.0;
+      if (inc > 0) {
+        progress = (exp / inc).clamp(0.0, 1.0);
+      } else if (exp > 0) {
+        progress = 1.0;
+      }
+
+      return Container(
+        padding: EdgeInsets.all(24.r),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF231C18).withOpacity(0.04),
+              blurRadius: 16.r,
+              offset: const Offset(0, 8),
             ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            "\$1,240.00",
-            style: GoogleFonts.inter(
-              fontSize: 32.sp,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF231C18),
-            ),
-          ),
-          SizedBox(height: 24.h),
-          Row(
-            children: [
-              // Income
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.arrow_downward, size: 14.r, color: const Color(0xFF8A7665)),
-                        SizedBox(width: 4.w),
-                        Text(
-                          "INCOME",
-                          style: GoogleFonts.inter(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF8C8681),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      "+\$2,100",
-                      style: GoogleFonts.inter(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF8A7665),
-                      ),
-                    ),
-                  ],
-                ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "CURRENT DAY BALANCE",
+              style: GoogleFonts.inter(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+                color: const Color(0xFF8C8681),
               ),
-              // Expenses
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.arrow_upward, size: 14.r, color: const Color(0xFFC84C4C)),
-                        SizedBox(width: 4.w),
-                        Text(
-                          "EXPENSES",
-                          style: GoogleFonts.inter(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF8C8681),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      "-\$860",
-                      style: GoogleFonts.inter(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFC84C4C),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 24.h),
-          // Custom Rounded Progress Bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4.r),
-            child: LinearProgressIndicator(
-              value: 0.6,
-              minHeight: 6.h,
-              backgroundColor: const Color(0xFFEAE7E4),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFB09F92)),
             ),
-          ),
-        ],
-      ),
-    );
+            SizedBox(height: 8.h),
+            Text(
+              "${bal < 0 ? '-' : ''}\$${bal.abs().toStringAsFixed(2)}",
+              style: GoogleFonts.inter(
+                fontSize: 32.sp,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF231C18),
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Row(
+              children: [
+                // Income
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.arrow_downward, size: 14.r, color: const Color(0xFF8A7665)),
+                          SizedBox(width: 4.w),
+                          Text(
+                            "INCOME",
+                            style: GoogleFonts.inter(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF8C8681),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "+\$${inc.toStringAsFixed(2)}",
+                        style: GoogleFonts.inter(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF8A7665),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Expenses
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.arrow_upward, size: 14.r, color: const Color(0xFFC84C4C)),
+                          SizedBox(width: 4.w),
+                          Text(
+                            "EXPENSES",
+                            style: GoogleFonts.inter(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF8C8681),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "-\$${exp.toStringAsFixed(2)}",
+                        style: GoogleFonts.inter(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFC84C4C),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 24.h),
+            // Custom Rounded Progress Bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4.r),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 6.h,
+                backgroundColor: const Color(0xFFEAE7E4),
+                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFB09F92)),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -278,7 +305,9 @@ class HistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transactions = [
+    final controller = Get.find<TrackerController>();
+
+    final mockTransactions = [
       _TransactionItem(
         title: "Starbucks Coffee",
         category: "Food & Drink",
@@ -317,114 +346,129 @@ class HistoryList extends StatelessWidget {
       ),
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "History of Today",
-              style: GoogleFonts.inter(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF231C18),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEAE7E4).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(16.r),
+    return Obx(() {
+      final trackers = controller.trackers;
+      final displayList = trackers.isNotEmpty
+          ? trackers.map((tx) {
+              final isInc = tx.type == "INCOME";
+              return _TransactionItem(
+                title: tx.title,
+                category: isInc ? "Income" : "Expense",
+                time: tx.date,
+                amount: isInc ? "+\$${tx.cost.toStringAsFixed(2)}" : "-\$${tx.cost.toStringAsFixed(2)}",
+                isIncome: isInc,
+                iconData: isInc ? Icons.arrow_downward : Icons.arrow_upward,
+                iconBg: isInc ? const Color(0xFF8A7665) : const Color(0xFFC84C4C),
+              );
+            }).toList()
+          : mockTransactions;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "History of Today",
+                style: GoogleFonts.inter(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF231C18),
                 ),
-                child: Text(
-                  "See All",
-                  style: GoogleFonts.inter(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF231C18),
-                  ),
-                ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 16.h),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: transactions.length,
-          separatorBuilder: (_, __) => SizedBox(height: 12.h),
-          itemBuilder: (context, index) {
-            final tx = transactions[index];
-            return Container(
-              padding: EdgeInsets.all(16.r),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF231C18).withOpacity(0.02),
-                    blurRadius: 8.r,
-                    offset: const Offset(0, 4),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEAE7E4).withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // Circular Icon Container
-                  Container(
-                    width: 44.w,
-                    height: 44.h,
-                    decoration: BoxDecoration(
-                      color: tx.iconBg,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(tx.iconData, color: Colors.white, size: 20.r),
-                  ),
-                  SizedBox(width: 12.w),
-                  // Title and Subtitle
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tx.title,
-                          style: GoogleFonts.inter(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF231C18),
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "${tx.category} • ${tx.time}",
-                          style: GoogleFonts.inter(
-                            fontSize: 12.sp,
-                            color: const Color(0xFF8C8681),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Amount
-                  Text(
-                    tx.amount,
+                  child: Text(
+                    "See All",
                     style: GoogleFonts.inter(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      color: tx.isIncome ? const Color(0xFF8A7665) : const Color(0xFFC84C4C),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF231C18),
                     ),
                   ),
-                ],
+                ),
               ),
-            );
-          },
-        ),
-      ],
-    );
+            ],
+          ),
+          SizedBox(height: 16.h),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: displayList.length,
+            separatorBuilder: (_, __) => SizedBox(height: 12.h),
+            itemBuilder: (context, index) {
+              final tx = displayList[index];
+              return Container(
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF231C18).withOpacity(0.02),
+                      blurRadius: 8.r,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44.w,
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: tx.iconBg,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(tx.iconData, color: Colors.white, size: 20.r),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tx.title,
+                            style: GoogleFonts.inter(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF231C18),
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            "${tx.category} • ${tx.time}",
+                            style: GoogleFonts.inter(
+                              fontSize: 12.sp,
+                              color: const Color(0xFF8C8681),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      tx.amount,
+                      style: GoogleFonts.inter(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: tx.isIncome ? const Color(0xFF8A7665) : const Color(0xFFC84C4C),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    });
   }
 }
 
