@@ -1,6 +1,56 @@
+class AppStrings {
+  AppStrings._();
 
-class AppText{
-  AppText._();
-
-  static const String appName='';
+  static const String appName = 'app_name';
+  static const String home = 'home';
+  static const String sparkle = 'sparkle';
+  static const String sparkleInsights = 'sparkle_insights';
+  static const String profile = 'profile';
+  static const String logout = 'logout';
+  static const String login = 'login';
+  static const String signup = 'signup';
+  static const String email = 'email';
+  static const String password = 'password';
+  static const String confirmPassword = 'confirm_password';
+  static const String fullName = 'full_name';
+  static const String enterEmail = 'enter_email';
+  static const String enterPassword = 'enter_password';
+  static const String enterName = 'enter_name';
+  static const String confirmYourPassword = 'confirm_your_password';
+  static const String forgotPassword = 'forgot_password';
+  static const String dontHaveAccount = 'dont_have_account';
+  static const String alreadyHaveAccount = 'already_have_account';
+  static const String welcomeBack = 'welcome_back';
+  static const String loginSubtitle = 'login_subtitle';
+  static const String createAccount = 'create_account';
+  static const String signupSubtitle = 'signup_subtitle';
+  static const String goodMorning = 'good_morning';
+  static const String noProfileData = 'no_profile_data';
+  static const String retry = 'retry';
+  static const String userId = 'user_id';
+  static const String today = 'today';
+  static const String weekly = 'weekly';
+  static const String monthly = 'monthly';
+  static const String income = 'income';
+  static const String expense = 'expense';
+  static const String balance = 'balance';
+  static const String addTransaction = 'add_transaction';
+  static const String title = 'title';
+  static const String amount = 'amount';
+  static const String date = 'date';
+  static const String selectType = 'select_type';
+  static const String save = 'save';
+  static const String age = 'age';
+  static const String enterAge = 'enter_age';
+  static const String overall = 'overall';
+  static const String historyOfToday = 'history_of_today';
+  static const String overallHistory = 'overall_history';
+  static const String noTransactions = 'no_transactions';
+  static const String todayBalance = 'today_balance';
+  static const String overallBalance = 'overall_balance';
+  static const String enterTitle = 'enter_title';
+  static const String enterAmount = 'enter_amount';
+  static const String selectDate = 'select_date';
+  static const String type = 'type';
+  static const String ammountHint = 'amount_hint';
 }

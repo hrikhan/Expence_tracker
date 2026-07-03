@@ -6,6 +6,7 @@ class AuthController extends GetxController {
   final NetworkCaller _networkCaller = NetworkCaller();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
+  final ageController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -71,6 +72,16 @@ class AuthController extends GetxController {
       );
       return false;
     }
+    final ageText = ageController.text.trim();
+    if (ageText.isEmpty || int.tryParse(ageText) == null || (int.tryParse(ageText) ?? 0) <= 0) {
+      Get.snackbar(
+        "Invalid Age",
+        "Please enter a valid age.",
+        backgroundColor: const Color(0xFFC84C4C),
+        colorText: Colors.white,
+      );
+      return false;
+    }
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar(
         "Password Mismatch",
@@ -91,6 +102,8 @@ class AuthController extends GetxController {
         body: {
           'email': emailController.text.trim(),
           'password': passwordController.text,
+          'fullName': nameController.text.trim(),
+          'age': int.tryParse(ageController.text.trim()) ?? 0,
         },
       );
 
@@ -181,16 +194,9 @@ class AuthController extends GetxController {
   void clearFields() {
     nameController.clear();
     emailController.clear();
+    ageController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.onClose();
-  }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'core/bindings/controller_binder.dart';
-import 'core/utils/theme/theme.dart';
+import 'package:expense_tracker/core/core.dart';
 import 'routes/app_routes.dart';
 
 class MyApp extends StatelessWidget {
@@ -10,8 +10,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.maybeOf(context);
+    final size = mediaQuery?.size ?? const Size(360, 875);
+    final width = size.width;
+    final height = size.height;
+    final isDesktopOrWeb = kIsWeb || width > 600;
+
     return ScreenUtilInit(
-      designSize: const Size(360, 875),
+      designSize: isDesktopOrWeb ? Size(width, height) : const Size(360, 875),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
@@ -20,6 +26,9 @@ class MyApp extends StatelessWidget {
           initialRoute: AppRoute.getSplashScreen(),
           getPages: AppRoute.routes,
           initialBinding: ControllerBinder(),
+          translations: AppTranslations(),
+          locale: Locale(StorageService.languageCode, StorageService.countryCode),
+          fallbackLocale: const Locale('en', 'US'),
           themeMode: ThemeMode.light,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,

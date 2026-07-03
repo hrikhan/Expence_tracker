@@ -40,6 +40,17 @@ class StorageService {
 
   // Getter for token
   static String? get token => _preferences?.getString(_tokenKey);
+
+  static const String _languageKey = 'languageCode';
+  static const String _countryKey = 'countryCode';
+
+  static String get languageCode => _preferences?.getString(_languageKey) ?? 'en';
+  static String get countryCode => _preferences?.getString(_countryKey) ?? 'US';
+
+  static Future<void> saveLanguage(String langCode, String countryCode) async {
+    await _preferences?.setString(_languageKey, langCode);
+    await _preferences?.setString(_countryKey, countryCode);
+  }
 }
 
 

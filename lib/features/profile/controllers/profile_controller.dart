@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:expense_tracker/core/core.dart';
+import 'package:expense_tracker/routes/app_routes.dart';
 import '../data/models/profile_model.dart';
 
 class ProfileController extends GetxController {
@@ -48,5 +49,10 @@ class ProfileController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> logout() async {
+    await StorageService.logoutUser();
+    Get.offAllNamed(AppRoute.loginScreen);
   }
 }

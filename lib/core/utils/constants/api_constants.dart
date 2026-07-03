@@ -1,8 +1,18 @@
+import 'package:flutter/foundation.dart';
+
 class ApiConstants {
-  static const String baseUrl = 'https://expence-tracker-backend-s6ku.onrender.com';
-  static const String signUp = '$baseUrl/auth/signup';
-  static const String login = '$baseUrl/auth/login';
-  static const String profile = '$baseUrl/users/profile';
-  static const String tracker = '$baseUrl/tracker';
-  static const String trackerToday = '$baseUrl/tracker/today';
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://localhost:3000';
+    }
+    return defaultTargetPlatform == TargetPlatform.android
+        ? 'http://10.0.2.2:3000'
+        : 'http://localhost:3000';
+  }
+
+  static String get signUp => '$baseUrl/auth/signup';
+  static String get login => '$baseUrl/auth/login';
+  static String get profile => '$baseUrl/users/profile';
+  static String get tracker => '$baseUrl/tracker';
+  static String get trackerToday => '$baseUrl/tracker/today';
 }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/core.dart';
 
+import 'package:expense_tracker/routes/app_routes.dart';
 import '../../controllers/auth_controller.dart';
 
 class SignUpScreen extends GetView<AuthController> {
@@ -13,7 +14,7 @@ class SignUpScreen extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF8F6),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -30,12 +31,12 @@ class SignUpScreen extends GetView<AuthController> {
                       width: 64.w,
                       height: 64.h,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF231C18),
+                        color: AppColors.primary,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.person_add_alt_1_outlined,
-                        color: Colors.white,
+                        color: AppColors.white,
                         size: 32.r,
                       ),
                     ),
@@ -43,80 +44,97 @@ class SignUpScreen extends GetView<AuthController> {
                   SizedBox(height: 24.h),
                   // Header
                   Text(
-                    "Create Account",
+                    AppStrings.createAccount.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 28.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    "Join us to manage your budget easily",
+                    AppStrings.signupSubtitle.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 14.sp,
-                      color: const Color(0xFF8C8681),
+                      color: AppColors.textSecondary,
                     ),
                   ),
                   SizedBox(height: 36.h),
                   // Name Field
                   Text(
-                    "Full Name",
+                    AppStrings.fullName.tr,
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   CustomTextField(
                     controller: controller.nameController,
-                    hintText: "Enter your full name",
+                    hintText: AppStrings.enterName.tr,
                     keyboardType: TextInputType.name,
-                    prefixIcon: Icon(Icons.person_outline, size: 20.r, color: const Color(0xFF8C8681)),
+                    prefixIcon: Icon(Icons.person_outline, size: 20.r, color: AppColors.textSecondary),
                   ),
                   SizedBox(height: 20.h),
                   // Email Field
                   Text(
-                    "Email Address",
+                    AppStrings.email.tr,
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   CustomTextField(
                     controller: controller.emailController,
-                    hintText: "Enter your email",
+                    hintText: AppStrings.enterEmail.tr,
                     keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icon(Icons.email_outlined, size: 20.r, color: const Color(0xFF8C8681)),
+                    prefixIcon: Icon(Icons.email_outlined, size: 20.r, color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 20.h),
+                  // Age Field
+                  Text(
+                    AppStrings.age.tr,
+                    style: GoogleFonts.inter(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  CustomTextField(
+                    controller: controller.ageController,
+                    hintText: AppStrings.enterAge.tr,
+                    keyboardType: TextInputType.number,
+                    prefixIcon: Icon(Icons.calendar_today_outlined, size: 20.r, color: AppColors.textSecondary),
                   ),
                   SizedBox(height: 20.h),
                   // Password Field
                   Text(
-                    "Password",
+                    AppStrings.password.tr,
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Obx(() => CustomTextField(
                         controller: controller.passwordController,
-                        hintText: "Enter your password",
+                        hintText: AppStrings.enterPassword.tr,
                         obscureText: controller.isPasswordObscured.value,
-                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: const Color(0xFF8C8681)),
+                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: AppColors.textSecondary),
                         suffixIcon: IconButton(
                           icon: Icon(
                             controller.isPasswordObscured.value
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
                             size: 20.r,
-                            color: const Color(0xFF8C8681),
+                            color: AppColors.textSecondary,
                           ),
                           onPressed: controller.togglePasswordObscured,
                         ),
@@ -124,26 +142,26 @@ class SignUpScreen extends GetView<AuthController> {
                   SizedBox(height: 20.h),
                   // Confirm Password Field
                   Text(
-                    "Confirm Password",
+                    AppStrings.confirmPassword.tr,
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Obx(() => CustomTextField(
                         controller: controller.confirmPasswordController,
-                        hintText: "Confirm your password",
+                        hintText: AppStrings.confirmYourPassword.tr,
                         obscureText: controller.isConfirmPasswordObscured.value,
-                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: const Color(0xFF8C8681)),
+                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: AppColors.textSecondary),
                         suffixIcon: IconButton(
                           icon: Icon(
                             controller.isConfirmPasswordObscured.value
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
                             size: 20.r,
-                            color: const Color(0xFF8C8681),
+                            color: AppColors.textSecondary,
                           ),
                           onPressed: controller.toggleConfirmPasswordObscured,
                         ),
@@ -151,14 +169,14 @@ class SignUpScreen extends GetView<AuthController> {
                   SizedBox(height: 32.h),
                   // Sign Up Button
                   Obx(() => CustomButton(
-                        text: "Create Account",
+                        text: AppStrings.createAccount.tr,
                         isLoading: controller.isLoading.value,
                         onPressed: () async {
                           if (controller.validateSignUp()) {
                             final success = await controller.signUp();
                             if (success) {
                               controller.clearFields();
-                              Get.back();
+                              Get.offAllNamed(AppRoute.getLoginScreen());
                             }
                           }
                         },
@@ -168,18 +186,18 @@ class SignUpScreen extends GetView<AuthController> {
                   Center(
                     child: Text.rich(
                       TextSpan(
-                        text: "Already have an account? ",
+                        text: AppStrings.alreadyHaveAccount.tr,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
-                          color: const Color(0xFF8C8681),
+                          color: AppColors.textSecondary,
                         ),
                         children: [
                           TextSpan(
-                            text: "Log In",
+                            text: AppStrings.login.tr,
                             style: GoogleFonts.inter(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF231C18),
+                              color: AppColors.textPrimary,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {

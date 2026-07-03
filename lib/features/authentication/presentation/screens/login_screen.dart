@@ -14,7 +14,7 @@ class LoginScreen extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF8F6),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -31,12 +31,12 @@ class LoginScreen extends GetView<AuthController> {
                       width: 64.w,
                       height: 64.h,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF231C18),
+                        color: AppColors.primary,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.account_balance_wallet_outlined,
-                        color: Colors.white,
+                        color: AppColors.white,
                         size: 32.r,
                       ),
                     ),
@@ -44,63 +44,63 @@ class LoginScreen extends GetView<AuthController> {
                   SizedBox(height: 24.h),
                   // Welcome Header
                   Text(
-                    "Welcome Back",
+                    AppStrings.welcomeBack.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 28.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    "Log in to track and optimize your expenses",
+                    AppStrings.loginSubtitle.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 14.sp,
-                      color: const Color(0xFF8C8681),
+                      color: AppColors.textSecondary,
                     ),
                   ),
                   SizedBox(height: 36.h),
                   // Email Input Field
                   Text(
-                    "Email Address",
+                    AppStrings.email.tr,
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   CustomTextField(
                     controller: controller.emailController,
-                    hintText: "Enter your email",
+                    hintText: AppStrings.enterEmail.tr,
                     keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icon(Icons.email_outlined, size: 20.r, color: const Color(0xFF8C8681)),
+                    prefixIcon: Icon(Icons.email_outlined, size: 20.r, color: AppColors.textSecondary),
                   ),
                   SizedBox(height: 20.h),
                   // Password Input Field
                   Text(
-                    "Password",
+                    AppStrings.password.tr,
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF231C18),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Obx(() => CustomTextField(
                         controller: controller.passwordController,
-                        hintText: "Enter your password",
+                        hintText: AppStrings.enterPassword.tr,
                         obscureText: controller.isPasswordObscured.value,
-                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: const Color(0xFF8C8681)),
+                        prefixIcon: Icon(Icons.lock_outlined, size: 20.r, color: AppColors.textSecondary),
                         suffixIcon: IconButton(
                           icon: Icon(
                             controller.isPasswordObscured.value
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
                             size: 20.r,
-                            color: const Color(0xFF8C8681),
+                            color: AppColors.textSecondary,
                           ),
                           onPressed: controller.togglePasswordObscured,
                         ),
@@ -112,11 +112,11 @@ class LoginScreen extends GetView<AuthController> {
                     child: TextButton(
                       onPressed: () {},
                       child: Text(
-                        "Forgot Password?",
+                        AppStrings.forgotPassword.tr,
                         style: GoogleFonts.inter(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFFB09F92),
+                          color: AppColors.accent,
                         ),
                       ),
                     ),
@@ -124,7 +124,7 @@ class LoginScreen extends GetView<AuthController> {
                   SizedBox(height: 24.h),
                   // Log In Button
                   Obx(() => CustomButton(
-                        text: "Log In",
+                        text: AppStrings.login.tr,
                         isLoading: controller.isLoading.value,
                         onPressed: () async {
                           if (controller.validateLogin()) {
@@ -141,18 +141,18 @@ class LoginScreen extends GetView<AuthController> {
                   Center(
                     child: Text.rich(
                       TextSpan(
-                        text: "Don't have an account? ",
+                        text: AppStrings.dontHaveAccount.tr,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
-                          color: const Color(0xFF8C8681),
+                          color: AppColors.textSecondary,
                         ),
                         children: [
                           TextSpan(
-                            text: "Sign Up",
+                            text: AppStrings.signup.tr,
                             style: GoogleFonts.inter(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF231C18),
+                              color: AppColors.textPrimary,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {

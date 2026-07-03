@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/utils/constants/colors.dart';
+import 'custom_loading_indicator.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -28,27 +30,24 @@ class CustomButton extends StatelessWidget {
           gradient: isDisabled
               ? LinearGradient(
                   colors: [
-                    const Color(0xFF231C18).withValues(alpha: 0.5),
-                    const Color(0xFF8A7665).withValues(alpha: 0.5),
+                    AppColors.primary.withValues(alpha: 0.5),
+                    AppColors.secondary.withValues(alpha: 0.5),
                   ],
                 )
               : const LinearGradient(
                   colors: [
-                    Color(0xFF231C18),
-                    Color(0xFF8A7665),
+                    AppColors.primary,
+                    AppColors.secondary,
                   ],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
         ),
         child: isLoading
-            ? SizedBox(
-                width: 20.w,
-                height: 20.h,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
+            ? CustomLoadingIndicator(
+                size: 20.r,
+                color: Colors.white,
+                strokeWidth: 2,
               )
             : Text(
                 text,

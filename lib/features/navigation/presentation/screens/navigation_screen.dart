@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/core.dart';
 
 import '../../controllers/navigation_controller.dart';
 import '../../../home/presentation/screens/home_screen.dart';
@@ -20,7 +21,7 @@ class NavigationScreen extends GetView<NavigationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF8F6),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -34,7 +35,7 @@ class NavigationScreen extends GetView<NavigationController> {
                   const VerticalDivider(
                     width: 1,
                     thickness: 1,
-                    color: Color(0xFFEAE7E4),
+                    color: AppColors.border,
                   ),
                   Expanded(
                     child: Obx(() => _pages[controller.currentIndex.value]),
@@ -48,41 +49,41 @@ class NavigationScreen extends GetView<NavigationController> {
                   Obx(() => NavigationRail(
                         selectedIndex: controller.currentIndex.value,
                         onDestinationSelected: controller.changeIndex,
-                        backgroundColor: Colors.white,
-                        selectedIconTheme: const IconThemeData(color: Color(0xFF231C18)),
-                        unselectedIconTheme: const IconThemeData(color: Color(0xFF8C8681)),
+                        backgroundColor: AppColors.white,
+                        selectedIconTheme: const IconThemeData(color: AppColors.primary),
+                        unselectedIconTheme: const IconThemeData(color: AppColors.textSecondary),
                         selectedLabelTextStyle: GoogleFonts.inter(
-                          color: const Color(0xFF231C18),
+                          color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 12.sp,
                         ),
                         unselectedLabelTextStyle: GoogleFonts.inter(
-                          color: const Color(0xFF8C8681),
+                          color: AppColors.textSecondary,
                           fontSize: 12.sp,
                         ),
                         labelType: NavigationRailLabelType.all,
-                        destinations: const [
+                        destinations: [
                           NavigationRailDestination(
-                            icon: Icon(Icons.calendar_today_outlined),
-                            selectedIcon: Icon(Icons.calendar_today),
-                            label: Text('Home'),
+                            icon: const Icon(Icons.wallet_outlined),
+                            selectedIcon: const Icon(Icons.wallet),
+                            label: Text(AppStrings.home.tr),
                           ),
                           NavigationRailDestination(
-                            icon: Icon(Icons.auto_awesome_outlined),
-                            selectedIcon: Icon(Icons.auto_awesome),
-                            label: Text('Sparkle'),
+                            icon: const Icon(Icons.auto_awesome_outlined),
+                            selectedIcon: const Icon(Icons.auto_awesome),
+                            label: Text(AppStrings.sparkle.tr),
                           ),
                           NavigationRailDestination(
-                            icon: Icon(Icons.person_outline),
-                            selectedIcon: Icon(Icons.person),
-                            label: Text('Profile'),
+                            icon: const Icon(Icons.person_outline),
+                            selectedIcon: const Icon(Icons.person),
+                            label: Text(AppStrings.profile.tr),
                           ),
                         ],
                       )),
                   const VerticalDivider(
                     width: 1,
                     thickness: 1,
-                    color: Color(0xFFEAE7E4),
+                    color: AppColors.border,
                   ),
                   Expanded(
                     child: Obx(() => _pages[controller.currentIndex.value]),
@@ -92,15 +93,16 @@ class NavigationScreen extends GetView<NavigationController> {
             } else {
               // Mobile View: Bottom Navigation Bar + FAB
               return Scaffold(
-                backgroundColor: const Color(0xFFFAF8F6),
+                backgroundColor: AppColors.background,
                 body: Obx(() => _pages[controller.currentIndex.value]),
                 floatingActionButton: Obx(() {
                   final isSelected = controller.currentIndex.value == 1;
                   return FloatingActionButton(
+                    heroTag: 'navigation_fab',
                     onPressed: () => controller.changeIndex(1),
-                    backgroundColor: isSelected ? const Color(0xFF231C18) : const Color(0xFFB09F92),
+                    backgroundColor: isSelected ? AppColors.primary : AppColors.accent,
                     shape: const CircleBorder(),
-                    child: Icon(Icons.auto_awesome, color: Colors.white, size: 24.r),
+                    child: Icon(Icons.auto_awesome, color: AppColors.white, size: 24.r),
                   );
                 }),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -117,7 +119,7 @@ class NavigationScreen extends GetView<NavigationController> {
   Widget _buildSidebar(BuildContext context) {
     return Container(
       width: 240.w,
-      color: Colors.white,
+      color: AppColors.white,
       padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,11 +128,11 @@ class NavigationScreen extends GetView<NavigationController> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Text(
-              "ExpenseTracker",
+              AppStrings.appName.tr,
               style: GoogleFonts.inter(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF231C18),
+                color: AppColors.primary,
               ),
             ),
           ),
@@ -138,23 +140,23 @@ class NavigationScreen extends GetView<NavigationController> {
           // Navigation Items
           _buildSidebarItem(
             index: 0,
-            icon: Icons.calendar_today_outlined,
-            activeIcon: Icons.calendar_today,
-            label: "Home",
+            icon: Icons.wallet_outlined,
+            activeIcon: Icons.wallet,
+            label: AppStrings.home.tr,
           ),
           SizedBox(height: 12.h),
           _buildSidebarItem(
             index: 1,
             icon: Icons.auto_awesome_outlined,
             activeIcon: Icons.auto_awesome,
-            label: "Sparkle Insights",
+            label: AppStrings.sparkleInsights.tr,
           ),
           SizedBox(height: 12.h),
           _buildSidebarItem(
             index: 2,
             icon: Icons.person_outline,
             activeIcon: Icons.person,
-            label: "Profile",
+            label: AppStrings.profile.tr,
           ),
         ],
       ),
@@ -175,14 +177,14 @@ class NavigationScreen extends GetView<NavigationController> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFFAF8F6) : Colors.transparent,
+            color: isSelected ? AppColors.background : AppColors.transparent,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Row(
             children: [
               Icon(
                 isSelected ? activeIcon : icon,
-                color: isSelected ? const Color(0xFF231C18) : const Color(0xFF8C8681),
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 size: 22.r,
               ),
               SizedBox(width: 16.w),
@@ -191,7 +193,7 @@ class NavigationScreen extends GetView<NavigationController> {
                 style: GoogleFonts.inter(
                   fontSize: 14.sp,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? const Color(0xFF231C18) : const Color(0xFF8C8681),
+                  color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -204,7 +206,7 @@ class NavigationScreen extends GetView<NavigationController> {
   // Bottom Navigation Bar for Mobile
   Widget _buildMobileBottomNavBar() {
     return BottomAppBar(
-      color: Colors.white,
+      color: AppColors.white,
       elevation: 0,
       padding: EdgeInsets.zero,
       shape: const CircularNotchedRectangle(),
@@ -212,10 +214,10 @@ class NavigationScreen extends GetView<NavigationController> {
       child: Container(
         height: 64.h,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF231C18).withOpacity(0.04),
+              color: AppColors.primary.withValues(alpha: 0.04),
               blurRadius: 16.r,
               offset: const Offset(0, -4),
             ),
@@ -227,9 +229,9 @@ class NavigationScreen extends GetView<NavigationController> {
             // Home Tab
             _buildMobileTabItem(
               index: 0,
-              icon: Icons.calendar_today_outlined,
-              activeIcon: Icons.calendar_today,
-              label: "Home",
+              icon: Icons.wallet_outlined,
+              activeIcon: Icons.wallet,
+              label: AppStrings.home.tr,
             ),
             // Spacing placeholder for docked FAB
             SizedBox(width: 48.w),
@@ -238,7 +240,7 @@ class NavigationScreen extends GetView<NavigationController> {
               index: 2,
               icon: Icons.person_outline,
               activeIcon: Icons.person,
-              label: "Profile",
+              label: AppStrings.profile.tr,
             ),
           ],
         ),
@@ -257,14 +259,14 @@ class NavigationScreen extends GetView<NavigationController> {
       return GestureDetector(
         onTap: () => controller.changeIndex(index),
         child: Container(
-          color: Colors.transparent,
+          color: AppColors.transparent,
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 isSelected ? activeIcon : icon,
-                color: isSelected ? const Color(0xFF231C18) : const Color(0xFF8C8681),
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 size: 22.r,
               ),
               SizedBox(height: 4.h),
@@ -273,7 +275,7 @@ class NavigationScreen extends GetView<NavigationController> {
                 style: GoogleFonts.inter(
                   fontSize: 11.sp,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: isSelected ? const Color(0xFF231C18) : const Color(0xFF8C8681),
+                  color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 ),
               ),
             ],
